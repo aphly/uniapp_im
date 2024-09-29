@@ -1,0 +1,94 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/tabbar/home",
+			"style": {
+				"navigationBarTitleText": "首页"
+			},
+			"iconfont":"uniapp icon-check",
+			"needLogin": false
+		},
+		// {
+		// 	"path": "pages/tabbar/cart",
+		// 	"style": {
+		// 		"navigationBarTitleText": "购物车"
+		// 	},
+		// 	"iconfont":"uniapp icon-check",
+		// 	"needLogin": true
+		// },
+		{
+			"path": "pages/tabbar/chatList",
+			"style": {
+				"navigationBarTitleText": "消息"
+			},
+			"iconfont":"uniapp icon-check",
+			"needLogin": true
+		},
+		{
+			"path": "pages/tabbar/chatMessage",
+			"style": {
+				"navigationBarTitleText": "聊天"
+			},
+			"needLogin": true
+		},
+		{
+			"path": "pages/tabbar/friend",
+			"style": {
+				"navigationBarTitleText": "朋友"
+			},
+			"iconfont":"uniapp icon-check",
+			"needLogin": true
+		},
+		{
+			"path": "pages/tabbar/my",
+			"style": {
+				"navigationBarTitleText": "我的"
+			},
+			"iconfont":"uniapp icon-check",
+			"needLogin": true
+		},
+		{
+			"path": "pages/tabbar/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			},
+			"needLogin": false
+		}
+	],
+	"subPackages": [
+		{
+			"root": "pages/my",
+			"pages": [{
+				"path": "setting/index",
+				"style": {
+					"navigationBarTitleText": "设置"
+				},
+				"needLogin": true
+			}]
+		}, 
+		{
+			"root": "pages/my",
+			"pages": [{
+				"path": "setting/avatar",
+				"style": {
+					"navigationBarTitleText": "头像"
+				},
+				"needLogin": true
+			}]
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+	// "tabBar": {
+	// 	"color": "#7A7E83",
+	// 	"selectedColor": "#3cc51f",
+	// 	"borderStyle": "white",
+	// 	"backgroundColor": "#ffffff",
+	// 	"list": []
+	// }
+}
