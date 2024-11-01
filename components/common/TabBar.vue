@@ -39,10 +39,10 @@
 </script>
 
 <style scoped>
-	.footer_m{position: fixed;height: 55px;bottom: 0;width: 100%;left: 0;background: #f9f9f9;display: flex;}
-	.footer{height: 55px;width: 100%;display: flex;justify-content: space-around;align-items: center; }
-	.footer_iconfont{font-size: 24px;position: relative; top: 2px;}
+	.footer_m{position: fixed;height: 110rpx;bottom: 0;width: 100%;left: 0;background: #f9f9f9;display: flex;}
+	.footer{height: 110rpx;width: 100%;display: flex;justify-content: space-around;align-items: center; }
+	.footer_iconfont{font-size: 48rpx;position: relative; top: 4rpx;}
 	.footer_li{text-align: center;}
-	.footer_li .footer_font{font-size: 12px;padding: 0 20px;position: relative; top: -2px;transform: scale(0.8);}
+	.footer_li .footer_font{font-size: 24rpx;padding: 12rpx 40rpx 0;position: relative; top: -4rpx;transform: scale(0.8);}
 	.footer .on { color: #677bde;}
 </style>

@@ -81,6 +81,9 @@
 <style>
 	/*每个页面公共css */
 	@import '@/static/css/index.css';
-	@import 'https://at.alicdn.com/t/c/font_4668822_itxddzk7ovq.css';
+	@import '@/static/iconfont/iconfont.css';
 	@import '@/static/css/c.css';
+	:root {
+	  --G-color: #32b32a;
+	}
 </style>

@@ -5,7 +5,7 @@
 			"style": {
 				"navigationBarTitleText": "首页"
 			},
-			"iconfont":"uniapp icon-check",
+			"iconfont":"uniapp icon-caidan-",
 			"needLogin": false
 		},
 		// {
@@ -21,7 +21,7 @@
 			"style": {
 				"navigationBarTitleText": "消息"
 			},
-			"iconfont":"uniapp icon-check",
+			"iconfont":"uniapp icon-ic_liaotian",
 			"needLogin": true
 		},
 		{
@@ -36,7 +36,7 @@
 			"style": {
 				"navigationBarTitleText": "朋友"
 			},
-			"iconfont":"uniapp icon-check",
+			"iconfont":"uniapp icon-lianxiren",
 			"needLogin": true
 		},
 		{
@@ -44,7 +44,7 @@
 			"style": {
 				"navigationBarTitleText": "我的"
 			},
-			"iconfont":"uniapp icon-check",
+			"iconfont":"uniapp icon-dengluzhanghao",
 			"needLogin": true
 		},
 		{
@@ -59,6 +59,36 @@
 		{
 			"root": "pages/my",
 			"pages": [{
+				"path": "info/index",
+				"style": {
+					"navigationBarTitleText": "个人信息"
+				},
+				"needLogin": true
+			}]
+		},
+		{
+			"root": "pages/my",
+			"pages": [{
+				"path": "info/avatar",
+				"style": {
+					"navigationBarTitleText": "头像"
+				},
+				"needLogin": true
+			}]
+		},
+		{
+			"root": "pages/my",
+			"pages": [{
+				"path": "info/nickName",
+				"style": {
+					"navigationBarTitleText": "昵称"
+				},
+				"needLogin": true
+			}]
+		},
+		{
+			"root": "pages/my",
+			"pages": [{
 				"path": "setting/index",
 				"style": {
 					"navigationBarTitleText": "设置"
@@ -66,12 +96,13 @@
 				"needLogin": true
 			}]
 		}, 
+		
 		{
 			"root": "pages/my",
 			"pages": [{
-				"path": "setting/avatar",
+				"path": "setting/pics",
 				"style": {
-					"navigationBarTitleText": "头像"
+					"navigationBarTitleText": "图片"
 				},
 				"needLogin": true
 			}]

@@ -72,6 +72,64 @@ export function request(config={}){
 	})
 }
 
+export function upload(config={}){
+	let {
+		url,
+		data={},
+		method="POST",
+		filePath,
+		formData,
+		name="file",
+		header={}
+	} = config
+	url = urlAddHost(url);
+	const user = useUserStore()
+	if(user.loginStatus){
+		header['Authorization'] = `Bearer ${user.accessToken}`;
+	}
+	return new Promise((resolve,reject)=>{	
+		uni.uploadFile({
+			url, 
+			filePath,
+			name,
+			formData,
+			header,
+			success: (res) => {
+				if(res.statusCode === 200){
+					let myRes = JSON.parse(res.data)
+					if(myRes.code==402){
+						refreshToken().then(() => {
+							upload(config).then(res1=>{
+								resolve(res1)
+							}).catch(err=>{
+								reject(err)
+							});
+						}).catch(err=>{
+							user.logout()
+							uni.navigateTo({
+								url: "/pages/login/index"
+							})
+						});
+					}else if(myRes.code==401){
+						user.logout()
+						uni.navigateTo({
+							url: "/pages/login/index"
+						})
+					}else{
+						resolve(res.data)
+					}
+				}else{
+					uni.showToast({
+						title:'网络错误状态:'+res.statusCode,
+						icon:"none"
+					})
+					reject(res)
+				}
+			},
+		})
+	});
+}
+
 function refreshToken() {
     return new Promise((resolve, reject) => {
 		const user = useUserStore()

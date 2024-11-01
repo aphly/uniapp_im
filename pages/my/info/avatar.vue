@@ -58,7 +58,6 @@
 	}
 	
 	function chooseImg1(){
-		
 		uni.chooseImage({
 			count: 1,
 			sizeType: ['original', 'compressed'],

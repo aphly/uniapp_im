@@ -1,8 +1,16 @@
 <template>
 	<view class="main">
 		<view v-if="userStore.loginStatus">
-			登录 了
-			<view>{{userStore.userInfo.nickname}}</view>
+			<view class="my" @click="info()">
+				<view class="myAvatar">
+					<img :src="userStore.userInfo.avatar_path?userStore.userInfo.avatar_path:'/static/img/avatar.png'" alt="">
+				</view>
+				<view class="myInfo">
+					<view class="myName">{{userStore.userInfo.nickname}}</view>
+					<view class="myName">Id:{{userStore.userInfo.uuid}}</view>
+				</view>
+			</view>
+			
 			<view @click="tz()">个人中心</view>
 		</view>
 		<view v-else>
@@ -23,22 +31,40 @@
 	const data = reactive({
 				title: 'Home',
 				list:["a","b",'c'],
-				count:0,
-				unilist:[]
 			})
-	
 	const login = ()=>{
 		uni.navigateTo({
 			url: '/pages/tabbar/login'
 		});
 	}
-	function tz(){
+	function info(){
 		uni.navigateTo({
-			url: '/pages/my/setting/index'
+			url: '/pages/my/info/index'
 		});
 	}
 </script>
 
-<style>
-	
+<style lang="scss" scoped>
+	.my{
+		display: flex;
+		background-color: #fff;
+		padding: 40rpx;
+		box-sizing: border-box;
+		.myAvatar{
+			width: 100rpx;
+			height: 100rpx;
+			margin-right: 20rpx;
+			border-radius: 10rpx;
+			img{
+				width: 100%;
+				height: 100%;
+			}
+		}
+		.myInfo{
+			width: calc(100% - 120rpx);
+			.myName{
+				
+			}
+		}
+	}
 </style>

@@ -26,12 +26,13 @@
 		<view class="">
 			好友列表
 		</view>
-		<view v-for="(item,index) in data.friendList" :key="index">
-			<view @click="chat(item.friend_uuid)">
-				<view>{{item.FriendUser.nickname}}</view>
+		<view class="friendUl">
+			<view class="friendLi" v-for="(item,index) in data.friendList" :key="index" @click="chat(item.friend_uuid)">
+				<view class="friendAvatar"><img :src="item.avatar_path?item.avatar_path:'/static/img/avatar.png'" alt=""></view>
+				<view class="friendName">{{item.FriendUser.nickname}}</view>
 			</view>
 		</view>
-		<TabBar currPath='pages/tabbar/cart'></TabBar>
+		<TabBar currPath='pages/tabbar/friend'></TabBar>
 	</view>
 </template>
 
@@ -92,5 +93,32 @@
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
+	.friendUl{
+		width: 100%;
+		padding:20rpx;
+		box-sizing: border-box;
+		background-color: #fff;
+		.friendLi{
+			display: flex;
+			align-items: center;
+			.friendAvatar{
+				width: 90rpx;
+				height: 90rpx;
+				border-radius: 10rpx;
+				margin-right: 20rpx;
+				img{
+					width: 100%;
+					height: 100%;
+				}
+			}
+			.friendName{
+				width: calc(100% - 110rpx);
+				overflow: hidden;
+				line-height: 89rpx;
+				height: 89rpx;
+				border-bottom: 1rpx solid #fafafa;
+			}
+		}
+	}
 </style>

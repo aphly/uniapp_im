@@ -7,7 +7,7 @@
 		<view v-for="(item,index) in data.unilist" :key="index">
 			<view>{{item.title}}</view>
 		</view>
-		<TabBar currPath='pages/tabbar/cart'></TabBar>
+		<TabBar currPath='pages/tabbar/chatList'></TabBar>
 	</view>
 </template>
 
