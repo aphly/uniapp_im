@@ -7,6 +7,7 @@ input:focus{ outline:none }
 
 img{max-width: 100%;}
 .group_is-invalid~.invalid-feedback{display: block;}
+.disabledBtn {pointer-events: none;opacity: 0.6;}
 
 .loading-pointer-inner{ margin: 0 auto;display: flex;justify-content: center;width:200px;height:50px}
 .loading-pointer-inner .pointer{width:10px;height:10px;margin:20px;background-color:#cccad3;border-radius:50%}
@@ -81,3 +82,5 @@ td,th {padding: 5px;}
 pre{padding: 10px;background: #f1f1f1;border-radius: 4px;margin-top: 5px;}
 
 .ad_breadcrumb li{max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.no_read_num_p{position:absolute;top:0rpx;right:0rpx;}
+.no_read_num{width:40rpx;height:40rpx;background-color:red;color:#fff;border-radius:50%;font-size:20rpx;text-align:center;line-height:40rpx}

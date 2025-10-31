@@ -1,50 +1,55 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/tabbar/home",
-			"style": {
-				"navigationBarTitleText": "首页"
-			},
-			"iconfont":"uniapp icon-caidan-",
-			"needLogin": false
-		},
-		// {
-		// 	"path": "pages/tabbar/cart",
-		// 	"style": {
-		// 		"navigationBarTitleText": "购物车"
-		// 	},
-		// 	"iconfont":"uniapp icon-check",
-		// 	"needLogin": true
-		// },
-		{
 			"path": "pages/tabbar/chatList",
 			"style": {
-				"navigationBarTitleText": "消息"
-			},
-			"iconfont":"uniapp icon-ic_liaotian",
-			"needLogin": true
-		},
-		{
-			"path": "pages/tabbar/chatMessage",
-			"style": {
-				"navigationBarTitleText": "聊天"
+				"navigationBarTitleText": "消息",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								"text": "\ue726",
+								"fontSrc": "/static/iconfont/iconfont.ttf",
+								"fontSize": "24px",
+								"width":"50px"
+							}
+						]
+					}
+				}
 			},
 			"needLogin": true
 		},
 		{
 			"path": "pages/tabbar/friend",
 			"style": {
-				"navigationBarTitleText": "朋友"
+				"navigationBarTitleText": "朋友",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 100,
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								"text": "\ue726",
+								"fontSrc": "/static/iconfont/iconfont.ttf",
+								"fontSize": "24px",
+								"width":"50px"
+							}
+						]
+					}
+				}
 			},
-			"iconfont":"uniapp icon-lianxiren",
 			"needLogin": true
 		},
 		{
 			"path": "pages/tabbar/my",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "我的",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
 			},
-			"iconfont":"uniapp icon-dengluzhanghao",
 			"needLogin": true
 		},
 		{
@@ -53,73 +58,351 @@
 				"navigationBarTitleText": "登录"
 			},
 			"needLogin": false
+		},
+		{
+			"path": "pages/tabbar/sms",
+			"style": {
+				"navigationBarTitleText": ""
+			},
+			"needLogin": false
+		},
+		{
+			"path": "pages/tabbar/web",
+			"style": {
+				"navigationBarTitleText": "web"
+			},
+			"needLogin": false
 		}
 	],
 	"subPackages": [
 		{
-			"root": "pages/my",
-			"pages": [{
-				"path": "info/index",
+			"root": "pages/friend",
+			"pages": [
+			{
+				"path": "addType",
 				"style": {
-					"navigationBarTitleText": "个人信息"
+					"navigationBarTitleText": "新的朋友"
 				},
 				"needLogin": true
-			}]
-		},
-		{
-			"root": "pages/my",
-			"pages": [{
-				"path": "info/avatar",
+			},
+			{
+				"path": "add",
 				"style": {
-					"navigationBarTitleText": "头像"
+					"navigationBarTitleText": "添加朋友"
 				},
 				"needLogin": true
-			}]
-		},
-		{
-			"root": "pages/my",
-			"pages": [{
-				"path": "info/nickName",
+			},
+			{
+				"path": "new",
 				"style": {
-					"navigationBarTitleText": "昵称"
+					"navigationBarTitleText": "新的朋友",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "添加朋友",
+									"width":"60px",
+									"fontSize": "14px"
+								}
+							]
+						}
+					}
 				},
 				"needLogin": true
-			}]
+			},
+			{
+				"path": "newVerify",
+				"style": {
+					"navigationBarTitleText": "通过朋友验证"
+				},
+				"needLogin": true
+			},
+			{
+				"path": "profile",
+				"style": {
+					"navigationBarTitleText": "个人资料",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "\ue619",
+									"fontSrc": "/static/iconfont/iconfont.ttf",
+									"fontSize": "24px",
+									"width":"50px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			},
+			{
+				"path": "applyAdd",
+				"style": {
+					"navigationBarTitleText": "申请添加朋友"
+				},
+				"needLogin": true
+			},
+			{
+				"path": "profileSetting",
+				"style": {
+					"navigationBarTitleText": "资料设置"
+				},
+				"needLogin": true
+			}
+			]
 		},
 		{
-			"root": "pages/my",
+			"root": "pages/center",
 			"pages": [{
+				"path": "profile/index",
+				"style": {
+					"navigationBarTitleText": "个人资料"
+				},
+				"needLogin": true
+			},
+			{
+				"path": "profile/avatar",
+				"style": {
+					"navigationBarTitleText": "头像",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "\ue619",
+									"fontSrc": "/static/iconfont/iconfont.ttf",
+									"fontSize": "24px",
+									"width":"50px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			},{
+				"path": "profile/nickname",
+				"style": {
+					"navigationBarTitleText": "昵称",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "完成",
+									"width":"60px",
+									"fontSize": "14px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			},{
+				"path": "profile/gender",
+				"style": {
+					"navigationBarTitleText": "设置性别",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "完成",
+									"width":"60px",
+									"fontSize": "14px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			},{
+				"path": "profile/note",
+				"style": {
+					"navigationBarTitleText": "个性签名",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "完成",
+									"width":"60px",
+									"fontSize": "14px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			},{
 				"path": "setting/index",
 				"style": {
 					"navigationBarTitleText": "设置"
 				},
 				"needLogin": true
-			}]
-		}, 
-		
-		{
-			"root": "pages/my",
-			"pages": [{
-				"path": "setting/pics",
+			},{
+				"path": "setting/password",
 				"style": {
-					"navigationBarTitleText": "图片"
+					"navigationBarTitleText": "密码",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "完成",
+									"width":"60px",
+									"fontSize": "14px"
+								}
+							]
+						}
+					}
 				},
 				"needLogin": true
-			}]
+			}
+			]
+		},
+		{
+			"root": "pages/chat",
+			"pages": [{
+				"path": "message",
+				"style": {
+					"navigationBarTitleText": "聊天",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "\ue619",
+									"fontSrc": "/static/iconfont/iconfont.ttf",
+									"fontSize": "24px",
+									"width":"50px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			},
+			{
+				"path": "info",
+				"style": {
+					"navigationBarTitleText": "聊天信息",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "\ue619",
+									"fontSrc": "/static/iconfont/iconfont.ttf",
+									"fontSize": "24px",
+									"width":"50px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			}
+			]
+		},
+		{
+			"root": "pages/group",
+			"pages": [{
+				"path": "select",
+				"style": {
+					"navigationBarTitleText": "发起群聊",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "完成",
+									"width":"60px",
+									"fontSize": "14px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			},
+			{
+				"path": "list",
+				"style": {
+					"navigationBarTitleText": "群聊"
+				},
+				"needLogin": true
+			},
+			{
+				"path": "admin",
+				"style": {
+					"navigationBarTitleText": "群管理"
+				},
+				"needLogin": true
+			},
+			{
+				"path": "remove",
+				"style": {
+					"navigationBarTitleText": "移除成员",
+					"app-plus": {
+						"titleNView": {
+							"buttons": [
+								{
+									"text": "完成",
+									"width":"60px",
+									"fontSize": "14px"
+								}
+							]
+						}
+					}
+				},
+				"needLogin": true
+			}
+			]
 		}
 	],
 	"globalStyle": {
+		//"navigationStyle": "custom",
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"app-plus": {
+			"bounce": "none",
+			"softinputNavBar": "none"
+		}
 	},
-	"uniIdRouter": {}
-	// "tabBar": {
-	// 	"color": "#7A7E83",
-	// 	"selectedColor": "#3cc51f",
-	// 	"borderStyle": "white",
-	// 	"backgroundColor": "#ffffff",
-	// 	"list": []
-	// }
+	"uniIdRouter": {},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle":"white",
+		"backgroundColor": "#f9f9f9",
+		"iconfontSrc":"static/iconfont/iconfont.ttf",
+		"height":"60px",
+		"list": [{
+			"pagePath": "pages/tabbar/chatList",
+			"iconfont": {
+				"text": "\ue690",
+				"selectedText": "\ue690",
+				"selectedColor": "#3cc51f",
+				"color": "#ACACAC",
+				"fontSize": "24px"
+			},
+			"text": "消息"
+		}, {
+			"pagePath": "pages/tabbar/friend",
+			"iconfont": {
+				"text": "\ue697",
+				"selectedText": "\ue697",
+				"selectedColor": "#3cc51f",
+				"color": "#ACACAC",
+				"fontSize": "24px"
+			},
+			"text": "朋友"
+		}, {
+			"pagePath": "pages/tabbar/my",
+			"iconfont": {
+				"text":"\ue621",
+				"selectedText": "\ue621",
+				"selectedColor": "#3cc51f",
+				"color": "#ACACAC",
+				"fontSize": "24px"
+			},
+			"text": "我的"
+		}
+		]
+	}
 }

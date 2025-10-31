@@ -1,124 +1,198 @@
 <template>
-	<view class="main">
-		<form >
-			<input type="text" v-model="data.formData.id" placeholder="请输入手机号码" />
-		</form>
-		<button @click="addFriend" >添加朋友</button>
+	<view class="layout">
 		
-		<view class="">
-			好友请求
+		<view class="main ">
+			<scroll-view scroll-y="true" class="friendScroll" @scrolltolower="lower">
+			<view class="friendList">
+				<view class="friendUl">
+					<view class="friendLi" @click="friendNew()">
+						<view class="friendAvatar"><image :src="Avatar" alt=""></image></view>
+						<view class="friendName">新的朋友</view>
+						<view class="friendNewNum">
+							<view v-if="data.friendNewNum>99" class="no_read_num">99+</view>
+							<view v-else-if="data.friendNewNum<99 && data.friendNewNum>0" class="no_read_num">{{data.friendNewNum}}</view>
+						</view>
+					</view>
+					<view class="friendLi" @click="group()">
+						<view class="friendAvatar"><image :src="Avatar" alt=""></image></view>
+						<view class="friendName">群聊</view>
+					</view>
+				</view>
+			</view>
+			<view class="friendList ">
+				<view class="friendListGroup" v-for="(val,key,index) in data.friendListGroup" :key="index">
+					<view class="friendListGroupKey">{{key}}</view>
+					<view class="friendUl">
+						<navigator v-for="(item,index1) in val" :key="index1" :url="'/pages/friend/profile?uid='+item.friend_uid">
+							<view class="friendLi">
+								<view class="friendAvatar"><image :src="item.FriendUser.avatar_path?item.FriendUser.avatar_path:Avatar" alt=""></image></view>
+								<view class="friendName">
+									<view>{{item.FriendUser.nickname}}</view>
+									<view v-if="item.remarks!=item.FriendUser.nickname" class="friendNameNote">{{item.remarks}}</view>
+								</view>
+							</view>
+						</navigator>
+					</view>
+				</view>
+			</view>
+			</scroll-view>
 		</view>
-		<view v-for="(item,index) in data.friendRequest" :key="index">
-			<view v-if="userStore.userInfo.uuid==item.from_uuid">
-				<view>请求{{item.to_name}}</view>
-			</view>
-			<view v-else>
-				<view>来着{{item.from_name}}</view>
-			</view>
-			<view v-if="item.status==0">
-			<button @click="agreeAddFriend(item.id)" >同意</button>
-			</view>
-			<view v-else>
-				已同意
-			</view>
-		</view>
-		
-		<view class="">
-			好友列表
-		</view>
-		<view class="friendUl">
-			<view class="friendLi" v-for="(item,index) in data.friendList" :key="index" @click="chat(item.friend_uuid)">
-				<view class="friendAvatar"><img :src="item.avatar_path?item.avatar_path:'/static/img/avatar.png'" alt=""></view>
-				<view class="friendName">{{item.FriendUser.nickname}}</view>
-			</view>
-		</view>
-		<TabBar currPath='pages/tabbar/friend'></TabBar>
+		<ActionMenu :action_menu="data.action_menu"></ActionMenu> 
 	</view>
 </template>
 
 <script setup>
 	import {reactive} from 'vue'
-	import TabBar from '@/components/common/TabBar.vue'
-	import { onReady } from '@dcloudio/uni-app'
+	import ActionMenu from '@/components/common/ActionMenu.vue'
+	import { onReady,onLoad,onShow,onHide,onNavigationBarButtonTap,onPullDownRefresh,onUnload } from '@dcloudio/uni-app'
 	import { request } from '@/utils/request.js';
+	import { Avatar } from '@/config/index.js';
 	import { useUserStore } from '@/store/user'
+	import Cache from '@/utils/cache.js'
+	import _get from '@/chat/_get.js'
+	import friendObj from '@/chat/friend.js'
 	const userStore = useUserStore()
+
 	const data = reactive({
-				title: '朋友',
 				formData:{
 					id:'',
 				},
-				friendRequest:[],
-				friendList:[]
+				friendListGroup :{},
+				page_size:40,
+				page:1,
+				pages:1,
+				action_menu:false,
+				friendNewNum:0,
 			})
-	onReady(async() => {
-		let res = await request({
-			url:'/v1/friend_request'
-		})
-		data.friendRequest = res.data.list
-		let res1 = await request({
-			url:'/v1/friend'
-		})
-		data.friendList = res1.data.list
-		console.log('onReady')
+			
+	onLoad(()=>{
 	})
-	function addFriend(){
-		request({
-			url:'/v1/friend_request_add',
-			method:"POST",
-			data:data.formData,
-		}).then((res)=>{
-			uni.showToast({
-				title:res.msg,
-				icon:'none'
-			})
-		})
-	}
-	function agreeAddFriend(id){
-		request({
-			url:'/v1/friend_request_op',
-			method:"POST",
-			data:{status:1,id},
-		}).then((res)=>{
-			uni.showToast({
-				title:res.msg,
-				icon:'none'
-			})
-		})
-	}
-	function chat(friend_uuid){
-		uni.navigateTo({
-			url: '/pages/tabbar/chatMessage?friend_uuid='+friend_uuid
-		});
-	}
-</script>
-
-<style lang="scss" scoped>
-	.friendUl{
-		width: 100%;
-		padding:20rpx;
-		box-sizing: border-box;
-		background-color: #fff;
-		.friendLi{
-			display: flex;
-			align-items: center;
-			.friendAvatar{
-				width: 90rpx;
-				height: 90rpx;
-				border-radius: 10rpx;
-				margin-right: 20rpx;
-				img{
-					width: 100%;
-					height: 100%;
-				}
-			}
-			.friendName{
-				width: calc(100% - 110rpx);
-				overflow: hidden;
-				line-height: 89rpx;
-				height: 89rpx;
-				border-bottom: 1rpx solid #fafafa;
+			
+	onNavigationBarButtonTap(e=>{
+		data.action_menu = !data.action_menu
+	})
+	
+	onPullDownRefresh(()=>{
+		Cache.localData('friend',null)
+		uni.stopPullDownRefresh();
+	})
+	
+	async function lower(e) {
+		if(data.page < data.pages){
+			data.page = data.page+1
+			let getFriendArr = await _get.getFriend({page:data.page,
+				page_size:data.page_size});
+			if(getFriendArr){
+				let friend =  friendObj.friendAddByPage(getFriendArr[0])
+				data.friendListGroup = friendObj.friendGroup(friend)
+				data.pages = getFriendArr[1]
 			}
 		}
 	}
+			
+	onShow(async() => {
+		uni.$on('friend_new_num',function(friendNewNum){
+			data.friendNewNum=friendNewNum
+		});
+		
+		uni.$on('friend',function(friend){
+			data.friendListGroup = friendObj.friendGroup(friend)
+		});
+		
+		let friend = Cache.localData('friend')
+		if(friend.length>0){
+			data.friendListGroup = friendObj.friendGroup(friend)
+		}else{
+			let getFriendArr = await _get.getFriend();
+			if(getFriendArr){
+				data.friendListGroup = friendObj.friendGroup(getFriendArr[0])
+				data.pages = getFriendArr[1]
+			}
+		}
+		let friendNewNum = Cache.localData('friendNewNum')
+		if(friendNewNum){
+			data.friendNewNum = friendNewNum
+		}else{
+			data.friendNewNum = 0
+		}
+	})
+	
+	onHide(() => {
+		uni.$off('friend');
+		uni.$off('friend_new_num');
+	})
+	
+	onUnload(() => {
+		uni.$off('friend');
+		uni.$off('friend_new_num');
+	})
+
+	function friendNew(){
+		uni.navigateTo({url: '/pages/friend/new'})
+	}
+	
+	function group(){
+		uni.navigateTo({url: '/pages/group/list'})
+	}
+	
+	
+</script>
+
+<style lang="scss" scoped>
+	.friendScroll{
+	}
+	
+	.friendList{
+		.friendListGroupKey{
+			padding: 0 20rpx;
+			box-sizing: border-box;
+			font-size: 24rpx;
+			line-height: 50rpx;
+			height: 50rpx;
+			color:#999;
+		}
+		.friendUl{
+			width: 100%;
+			padding:20rpx 0;
+			box-sizing: border-box;
+			background-color: #fff;
+			.friendLi{
+				display: flex;
+				align-items: center;
+				padding: 0 20rpx;
+				.friendAvatar{
+					width: 70rpx;
+					height: 70rpx;
+					padding:10rpx;
+					margin-right: 20rpx;
+					image{
+						width: 100%;
+						height: 100%;
+						border-radius: 10rpx;
+					}
+				}
+				.friendName{
+					flex-grow: 1;
+					overflow: hidden;
+					border-bottom: 1rpx solid #fafafa;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					height: 89rpx;
+					overflow: hidden;
+					.friendNameNote{
+						color:#666;
+						font-size: 20rpx;
+					}
+				}
+				.friendNewNum{
+					display: flex;
+					justify-content: center;
+					width: 100rpx;
+				}
+			}
+		}
+		
+	}
+
 </style>

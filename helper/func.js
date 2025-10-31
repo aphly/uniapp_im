@@ -21,3 +21,17 @@ export function arrEqual(arr1, arr2) {
 export function objEqual(obj1, obj2) {
   return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
+
+export function debounce(func, wait, immediate = false) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            timeout = null;
+            if (!immediate) func(...args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func(...args);
+    };
+}

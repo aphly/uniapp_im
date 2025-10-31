@@ -20,7 +20,7 @@ export function request(config={}){
 	url = urlAddHost(url);	
 	const user = useUserStore()
 	if(user.loginStatus){
-		header['Authorization'] = `Bearer ${user.accessToken}`;
+		header['X-Token'] = `${user.token.access_token}`;
 	}
 	return new Promise((resolve,reject)=>{	
 		uni.request({
@@ -39,15 +39,15 @@ export function request(config={}){
 							});
 						}).catch(err=>{
 							user.logout()
-							uni.navigateTo({
-								url: "/pages/login/index"
+							uni.reLaunch({
+								url: "/pages/tabbar/login"
 							})
 							//reject(err)
 						});
 					}else if(res.data.code==401){
 						user.logout()
-						uni.navigateTo({
-							url: "/pages/login/index"
+						uni.reLaunch({
+							url: "/pages/tabbar/login"
 						})
 					}else{
 						resolve(res.data)
@@ -85,7 +85,7 @@ export function upload(config={}){
 	url = urlAddHost(url);
 	const user = useUserStore()
 	if(user.loginStatus){
-		header['Authorization'] = `Bearer ${user.accessToken}`;
+		header['X-Token'] = `${user.token.access_token}`;
 	}
 	return new Promise((resolve,reject)=>{	
 		uni.uploadFile({
@@ -106,17 +106,17 @@ export function upload(config={}){
 							});
 						}).catch(err=>{
 							user.logout()
-							uni.navigateTo({
-								url: "/pages/login/index"
+							uni.reLaunch({
+								url: "/pages/tabbar/login"
 							})
 						});
 					}else if(myRes.code==401){
 						user.logout()
-						uni.navigateTo({
-							url: "/pages/login/index"
+						uni.reLaunch({
+							url: "/pages/tabbar/login"
 						})
 					}else{
-						resolve(res.data)
+						resolve(myRes)
 					}
 				}else{
 					uni.showToast({
@@ -130,20 +130,20 @@ export function upload(config={}){
 	});
 }
 
-function refreshToken() {
+export function refreshToken() {
     return new Promise((resolve, reject) => {
 		const user = useUserStore()
 		if(user.loginStatus){
 			let header = {}
-			header['Authorization'] = 'Bearer '+ user.userInfo.refresh_token
-			let url = urlAddHost('/v1/refresh_token');	
+			header['X-Token'] = user.token.refresh_token
+			let url = urlAddHost('/account/refresh_token');	
 			uni.request({
 			    url,
 				header,
 			    success: (res) => {
 			        if (res.statusCode === 200) {
 						if(res.data.code === 0){
-							user.changeAccessToken(res.data.data.user.access_token)
+							user.updateAccessToken(res.data.data)
 							resolve(res.data);
 						}else{
 							user.logout()
@@ -162,3 +162,56 @@ function refreshToken() {
 		}
     });
 }
+
+ export async function appUploadOss(dir,filePath){
+		const signRes = await request({
+			url:'/oss/sign',
+			method:"POST",
+			data:{"dir":dir},
+		})
+		if(signRes.code){
+			uni.showToast({
+				title: signRes.msg,
+				icon:'error'
+			})
+			return false
+		}
+		
+		let fileExtension = filePath.split('.').pop();
+		let data = signRes.data.sign
+		
+		let response = await uni.uploadFile({
+			url: data.host, 
+			filePath,
+			name: 'file',
+			formData: {
+				'success_action_status': '200',
+				'policy': data.policy,
+				'x-oss-signature': data.signature,
+				'x-oss-signature-version': "OSS4-HMAC-SHA256",
+				'x-oss-credential':  data.x_oss_credential,
+				'x-oss-date': data.x_oss_date,
+				'key': data.dir + signRes.data.filename+'.'+fileExtension,
+				'x-oss-security-token':data.security_token,
+				'callback': data.callback,
+			}
+		});
+		
+		if (response.statusCode!=200) {
+			uni.showToast({
+				title: 'Network response was not ok',
+				icon:'error'
+			})
+			return false
+		}
+		
+		let ossRes = response.data
+		ossRes = JSON.parse(ossRes)
+		if(ossRes.code){
+			uni.showToast({
+				title: ossRes.msg,
+				icon:'error'
+			})
+		}
+		return ossRes
+	}

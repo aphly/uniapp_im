@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-	import { reactive,defineProps } from 'vue'
+	import { reactive } from 'vue'
 	import { onLoad } from '@dcloudio/uni-app'
 	import {useRouterStore} from '@/store/router.js'
 	const props = defineProps({

@@ -1,5 +1,5 @@
 {
-    "name" : "test",
+    "name" : "im",
     "appid" : "__UNI__034B10A",
     "description" : "",
     "versionName" : "1.0.0",
@@ -16,12 +16,19 @@
             "autoclose" : true,
             "delay" : 0
         },
-		"optimization": {
-		  "subPackages": true
-		},
-		"runmode" : "liberate",
+        "optimization" : {
+            "subPackages" : true
+        },
+        "runmode" : "liberate",
         /* 模块配置 */
-        "modules" : {},
+        "modules" : {
+            "Camera" : {},
+            "Barcode" : {},
+            "Record" : {},
+            "VideoPlayer" : {},
+            "Maps" : {},
+            "Geolocation" : {}
+        },
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */
@@ -42,12 +49,31 @@
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
-                ]
+                ],
+                "minSdkVersion" : 21
             },
             /* ios打包配置 */
-            "ios" : {},
+            "ios" : {
+                "dSYMs" : false
+            },
             /* SDK配置 */
-            "sdkConfigs" : {}
+            "sdkConfigs" : {
+                "geolocation" : {
+                    "amap" : {
+                        "name" : "amapAO2RocKcd",
+                        "__platform__" : [ "ios", "android" ],
+                        "appkey_ios" : "2db9e24b50f7f17cf26337eddfa70a7e",
+                        "appkey_android" : "2db9e24b50f7f17cf26337eddfa70a7e"
+                    }
+                },
+                "maps" : {
+                    "amap" : {
+                        "name" : "amapAO2RocKcd",
+                        "appkey_ios" : "2db9e24b50f7f17cf26337eddfa70a7e",
+                        "appkey_android" : "2db9e24b50f7f17cf26337eddfa70a7e"
+                    }
+                }
+            }
         }
     },
     /* 快应用特有相关 */
@@ -59,9 +85,9 @@
             "urlCheck" : false
         },
         "usingComponents" : true,
-		"optimization": {
-		  "subPackages": true
-		}
+        "optimization" : {
+            "subPackages" : true
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -76,13 +102,13 @@
         "enable" : false
     },
     "vueVersion" : "3",
-	"h5":{
-		"optimization": {
-		  "subPackages": true
-		}
-		// "router": {
-		// 	"mode": "history"
-		// }
-	}
-	
+    "h5" : {
+        "optimization" : {
+            "subPackages" : true
+        }
+    }
 }
+// "router": {
+// 	"mode": "history"
+// }
+

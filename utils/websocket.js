@@ -1,93 +1,124 @@
-class websocket {
-	constructor(url, time) {
-		this.is_open_socket = false //避免重复连接
-		this.url = url //地址
-		this.data = null
-		//心跳检测
-		this.timeout= time //多少秒执行检测
-		this.heartbeatInterval= null //检测服务器端是否还活着
-		this.reconnectTimeOut= null //重连之后多久再次重连
-
-		try {
-			return this.connectInit()
-		} catch (e) {
-			console.log('catch');
-			this.is_open_socket = false
-			this.reconnect();
-		}
+import {refreshToken} from '@/utils/request.js'
+export default class websocket {
+	constructor(userStore) {
+		this.ws=null
+		this.url="" 
+		this.reconnectInterval =null
+		this.reconnectIntervalTime= 5000
+		this.userStore =userStore
 	}
 
-	// 进入这个页面的时候创建websocket连接【整个页面随时使用】
-	connectInit() {
-		this.socketTask = uni.connectSocket({
-			url: this.url,
-			success:()=>{
-				console.log("正准备建立websocket中...");
-				// 返回实例
-				return this.socketTask
-			},
+	connect() {
+		if(!this.userStore.token.access_token || !this.userStore.connector || this.ws){
+			console.log("return")
+			return
+		}
+		this.url = "ws://"+this.userStore.connector+'?token='+this.userStore.token.access_token
+		this.ws = uni.connectSocket({
+			url:this.url,
+			complete: ()=> {}
 		});
-		this.socketTask.onOpen((res) => {
+		
+		this.ws.onOpen((res) => {
 			console.log("WebSocket连接正常！");
-			clearTimeout(this.reconnectTimeOut)
-			clearTimeout(this.heartbeatInterval)
-			this.is_open_socket = true;
-			this.start();
-			// 注：只有连接正常打开中 ，才能正常收到消息
-			this.socketTask.onMessage((res) => {
-				console.log(res.data)
-			});
+			clearInterval(this.reconnectInterval)
+			switch(this.ws.readyState) {
+			    case 0:
+			      console.log('WebSocket状态：连接中...');
+			      break;
+			    case 1:
+			      console.log('WebSocket状态：已连接');
+			      break;
+			    case 2:
+			      console.log('WebSocket状态：关闭中...');
+			      break;
+			    case 3:
+			      console.log('WebSocket状态：已关闭');
+			      break;
+			}
 		})
-		// 监听连接失败，这里代码我注释掉的原因是因为如果服务器关闭后，和下面的onclose方法一起发起重连操作，这样会导致重复连接
-		// uni.onSocketError((res) => {
-		// 	console.log('WebSocket连接打开失败，请检查！');
-		// 	this.is_open_socket = false;
-		// 	this.reconnect();
-		// });
-		// 这里仅是事件监听【如果socket关闭了会执行】
-		this.socketTask.onClose(() => {
-			console.log("已经被关闭了")
-			this.is_open_socket = false;
-			this.reconnect();
+		
+		this.ws.onClose((e) => {
+			console.log(e)
+			this.ws=null
+			if(e.code==402){
+				refreshToken().then((resT) => {
+					//console.log(resT)
+					this.reconnect()
+				}).catch(err=>{
+					this.userStore.logout()
+					console.log("已经被关闭了")
+				});
+			}else if(e.code==401){
+				this.userStore.logout()
+				console.log("已经被关闭了:"+e.code)
+			}else{
+				console.log("已经被关闭了:"+e.code)
+				this.autoReconnect()
+			}
 		})
-	}
-	
-	//发送消息
-	send(value){
-		// 注：只有连接正常打开中 ，才能正常成功发送消息
-		this.socketTask.send({
-			data: value,
-			async success() {
-				console.log("消息发送成功");
-			},
-		});
-	}
-	//开启心跳检测
-	start(){
-		this.heartbeatInterval = setTimeout(()=>{
-			this.data={value:"传输内容",method:"方法名称"}
-			console.log(this.data)
-			this.send(JSON.stringify(this.data));
-		},this.timeout)
-	}
-	//重新连接
-	reconnect(){
-		//停止发送心跳
-		clearInterval(this.heartbeatInterval)
-		//如果不是人为关闭的话，进行重连
-		if(!this.is_open_socket){
-			this.reconnectTimeOut = setTimeout(()=>{
-				this.connectSocketInit();
-			},3000)
-		}
-	}
-	//外部获取消息
-	getMessage(callback) {
-		this.socketTask.onMessage((res) => {
+		this.ws.onError((res)=>{
+			console.log("onError",res)
+		})
+		this.ws.onMessage((res) => {
 			return callback(res)
 		})
 	}
- 
+	reconnect(){
+		if(this.ws!==null){
+			this.ws.close();
+			this.ws = null;
+		}
+		console.log("重新连接")
+		this.connect();
+	}
+	close(){
+		if(this.ws!==null){
+			this.ws.close();
+		}
+	}
+	autoReconnect(){
+		if(this.ws===null){
+			this.reconnectInterval = setTimeout(()=>{
+				console.log("自动重新连接")
+				this.reconnect();
+			},this.reconnectIntervalTime)
+		}
+	}
+	getMessage(callback) {
+		if(!this.ws){
+			console.log("ws close")
+			return
+		}
+		this.ws.onMessage((res) => {
+			return callback(res)
+		})
+	}
+	
+	send(route,body={}){
+		if(!this.ws){
+			console.log("ws close")
+			return
+		}
+		let data ={
+			route:route,
+			body:JSON.stringify(body)
+		}
+		if(this.ws.readyState===0){
+			setTimeout(this.ws.send({
+				data:JSON.stringify(data),
+				async success() {
+					console.log("消息发送成功");
+				},
+			}),1000)
+		}else{
+			this.ws.send({
+				data:JSON.stringify(data),
+				async success() {
+					console.log("消息发送成功");
+				},
+			});
+		}
+	}
 }
 
-module.exports = websocket

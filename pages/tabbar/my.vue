@@ -1,25 +1,48 @@
 <template>
-	<view class="main">
-		<view v-if="userStore.loginStatus">
-			<view class="my" @click="info()">
-				<view class="myAvatar">
-					<img :src="userStore.userInfo.avatar_path?userStore.userInfo.avatar_path:'/static/img/avatar.png'" alt="">
+	<view class="layout">
+		<view class="main ">
+			<view v-if="userStore.loginStatus">
+				<navigator url="/pages/center/profile/index">
+					<view class="my">
+						<view class="myAvatar">
+							<image :src="userStore.info.avatar_path?userStore.info.avatar_path:Avatar" alt=""></image>
+						</view>
+						<view class="myInfo">
+							<view class="myName">{{userStore.info.nickname}}</view>
+							<view class="myName_x">
+								<view>手机号:{{userStore.getMobile()}}</view>
+								<view class="uniapp icon-qianjin1"></view>
+							</view>
+						</view>
+					</view>
+				</navigator>
+				<view class="my_ul">
+					<navigator url="">
+						<view class="my_li">
+							<view class="uniapp icon-shezhi my_li1"></view>
+							<view class="my_li2 single">服务待定</view>
+							<view class="uniapp icon-qianjin1"></view>
+						</view>
+					</navigator>
 				</view>
-				<view class="myInfo">
-					<view class="myName">{{userStore.userInfo.nickname}}</view>
-					<view class="myName">Id:{{userStore.userInfo.uuid}}</view>
+				<view class="my_ul">
+					<navigator  url="/pages/center/setting/index">
+						<view class="my_li">
+							<view class="uniapp icon-shezhi my_li1"></view>
+							<view class="my_li2 single">设置</view>
+							<view class="uniapp icon-qianjin1"></view>
+						</view>
+					</navigator>
 				</view>
 			</view>
-			
-			<view @click="tz()">个人中心</view>
-		</view>
-		<view v-else>
-			<view class="text-area">
-				<text class="title">{{data.title}}</text>
+			<view v-else>
+				<view class="text-area">
+					<text class="title">{{data.title}}</text>
+				</view>
+				<button @click="login">登录/注册</button>
 			</view>
-			<button @click="login">登录/注册</button>
 		</view>
-		<TabBar currPath='pages/tabbar/my'></TabBar>
+		<!-- <TabBar currPath='pages/tabbar/my'></TabBar> -->
 	</view>
 </template>
 
@@ -27,6 +50,7 @@
 	import {reactive} from 'vue'
 	import { useUserStore } from '@/store/user'
 	import TabBar from '@/components/common/TabBar.vue'
+	import { Avatar } from '@/config/index.js';
 	const userStore = useUserStore()
 	const data = reactive({
 				title: 'Home',
@@ -37,34 +61,52 @@
 			url: '/pages/tabbar/login'
 		});
 	}
-	function info(){
+	function center(){
 		uni.navigateTo({
-			url: '/pages/my/info/index'
+			url: '/pages/center/index'
 		});
 	}
+	
 </script>
 
 <style lang="scss" scoped>
 	.my{
 		display: flex;
 		background-color: #fff;
-		padding: 40rpx;
+		padding: 140rpx 20rpx 40rpx;
 		box-sizing: border-box;
 		.myAvatar{
-			width: 100rpx;
-			height: 100rpx;
+			width: 120rpx;
+			height: 120rpx;
 			margin-right: 20rpx;
-			border-radius: 10rpx;
-			img{
+			image{
 				width: 100%;
 				height: 100%;
+				border-radius: 10rpx;
 			}
 		}
 		.myInfo{
-			width: calc(100% - 120rpx);
+			width: calc(100% - 140rpx);
 			.myName{
-				
+				overflow: hidden;
+				height: 40rpx;
+				line-height: 40rpx;
+				margin-top: 10rpx;
+				font-size: 36rpx;
+				font-weight: 600;
+			}
+			.myName_x{
+				margin-top:28rpx;
+				font-size: 24rpx;
+				color:#999;
+				display: flex;
+				justify-content: space-between;
+				.icon-qianjin1{
+					font-size:24rpx;
+					color:#999;
+				}
 			}
 		}
 	}
+	
 </style>

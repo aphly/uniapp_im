@@ -11,6 +11,7 @@ export const useRouterStore = defineStore('router', {
 	},
 	actions: {
 		init(){
+			this.tabBar = []
 			pages.forEach((item)=> {
 				if(item.iconfont){
 					this.tabBar.push({
